@@ -1,20 +1,15 @@
-export interface MovieData {
-    title: string;
-    director: string;
-    year: number;
-    genres: string[];
-}
-export interface PatchData {
-    title?: string;
-    director?: string;
-    year?: number;
-    genres?: string[];
-}
+import { CreateMovieDTO } from "../dto/create-movie.dto";
 
-export class Movie implements MovieData {
-    id: number;
+export class Movie {
     title: string;
     director: string;
     year: number;
     genres: string[];
+
+    constructor(
+        public id: number,
+        movieData: CreateMovieDTO,
+    ) {
+        Object.assign(this, movieData);
+    }
 }

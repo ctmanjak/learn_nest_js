@@ -1,5 +1,7 @@
-import { Get, Injectable, Param } from '@nestjs/common';
-import { Movie, MovieData, PatchData } from './entities/movies.entity';
+import { Injectable, NotFoundException, Param } from '@nestjs/common';
+import { CreateMovieDTO } from './dto/create-movie.dto';
+import { UpdateMovieDTO } from './dto/update-movie.dto';
+import { Movie } from './entities/movies.entity';
 
 @Injectable()
 export class MoviesService {
@@ -10,22 +12,28 @@ export class MoviesService {
     }
 
     getOne(movieId: number): Movie {
-        return this.movies.find(movie => movie.id === movieId);
+        const foundMovie = this.movies.find(movie => movie.id === movieId);
+        if (!foundMovie) {
+            throw new NotFoundException(`Movie with ID ${movieId} not found.`);
+        }
+        return foundMovie;
     }
 
-    addMovie(movieData: MovieData): Movie {
-        this.movies.push({
-            id: this.movies.length,
-            ...movieData,
-        })
-        return this.movies[this.movies.length-1];
+    addMovie(movieData: CreateMovieDTO): Movie {
+        const movies_num = this.movies.length;
+        this.movies.push(new Movie(movies_num ? this.movies[movies_num - 1].id + 1 : 0, movieData));
+        return this.movies[movies_num];
     }
 
     removeMovie(movieId: number): Movie {
         return this.movies.splice(this.movies.findIndex(movie => movie.id === movieId), 1)[0];
     }
 
-    updateMovie(movieId: number, patchData: PatchData): object {
-        return Object.assign(this.movies.find(movie => movie.id === movieId), patchData);
+    updateMovie(movieId: number, patchData: UpdateMovieDTO): Movie {
+        let foundMovie = this.movies.find(movie => movie.id === movieId);
+        if (!foundMovie) {
+            throw new NotFoundException(`Movie with ID ${movieId} not found.`);
+        }
+        return Object.assign(foundMovie, patchData);
     }
 }
