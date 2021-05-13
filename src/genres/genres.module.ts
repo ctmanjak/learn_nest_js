@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Genre, GenreSchema } from 'src/genres/schemas/genres.schema';
-import { MoviesController } from './movies.controller';
-import { MoviesService } from './movies.service';
-import { Movie, MovieSchemaProvider } from './schemas/movies.schema';
+import { Movie, MovieSchemaProvider } from 'src/movies/schemas/movies.schema';
+import { GenresController } from './genres.controller';
+import { GenresService } from './genres.service';
+import { Genre, GenreSchema } from './schemas/genres.schema';
 
 @Module({
     imports: [
         // MongooseModule.forFeature(
         //     [
-        //         // { name: Movie.name, schema: MovieSchema },
         //         { name: Genre.name, schema: GenreSchema },
+        //         // { name: Movie.name, schema: MovieSchema },
         //     ]
         // ),
         MongooseModule.forFeatureAsync(
@@ -25,7 +25,7 @@ import { Movie, MovieSchemaProvider } from './schemas/movies.schema';
             ]
         )
     ],
-    controllers: [MoviesController],
-    providers: [MoviesService],
+    controllers: [GenresController],
+    providers: [GenresService],
 })
-export class MoviesModule {}
+export class GenresModule {}

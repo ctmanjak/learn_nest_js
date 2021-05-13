@@ -1,98 +1,127 @@
-import { NotFoundException } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import { CreateMovieDTO } from './dto/create-movie.dto';
-import { Movie } from './entities/movies.entity';
-import { MoviesService } from './movies.service';
+// import { NotFoundException } from '@nestjs/common';
+// import { ModuleTokenFactory } from '@nestjs/core/injector/module-token-factory';
+// import { getModelToken, MongooseModule } from '@nestjs/mongoose';
+// import { Test, TestingModule } from '@nestjs/testing';
+// import { Model } from 'mongoose';
+// import { Movie } from './entities/movies.entity';
+// import { MoviesController } from './movies.controller';
+// import { MoviesModule } from './movies.module';
+// import { MoviesService } from './movies.service';
+// import { MovieDocument, MovieSchema } from './schemas/movies.schema';
 
-describe('MoviesService', () => {
-  let service: MoviesService;
+// const movies: Movie[] = [];
 
-  beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [MoviesService],
-    }).compile();
+// describe('MoviesService', () => {
+//   let service: MoviesService;
+//   let controller: MoviesController;
+//   const event = {
+//     _id: "0",
+//     title: "Test Movie",
+//     director: "Test Director",
+//     year: 2021,
+//     genres: ["action", "thriller"],
+//   }
 
-    service = module.get<MoviesService>(MoviesService);
+//   class EventModel {
+//     constructor(private data) {}
+//     save = jest.fn().mockResolvedValue(this.data);
+//     static find = jest.fn().mockResolvedValue([event]);
+//     static findOne = jest.fn().mockResolvedValue(event);
+//     static findById = jest.fn().mockResolvedValue(event);
+//     static findOneAndUpdate = jest.fn().mockResolvedValue(event);
+//     static deleteOne = jest.fn().mockResolvedValue(true);
+//   }
+  
+//   beforeAll(async () => {
+//     const module: TestingModule = await Test.createTestingModule({
+//       providers: [
+//         MoviesService,
+//         {
+//           provide: getModelToken(Movie.name),
+//           useValue: EventModel,
+//         }
+//       ],
+//     }).compile();
 
-    service.addMovie({
-      title: "Test Movie",
-      director: "Test Director",
-      year: 2021,
-      genres: ["action", "thriller"],
-    })
-  });
+//     service = await module.get<MoviesService>(MoviesService);
+//   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+//   it('should be defined', () => {
+//     expect(service).toBeDefined();
+//   });
 
-  describe("addMovie", () => {
-    it("should add a movie", () => {
-      expect(service.addMovie({
-        title: "Test Movie 2",
-        director: "Test Director",
-        year: 2021,
-        genres: ["action", "thriller"],
-      })).toEqual(service.getOne(1));
-    });
-  });
+//   describe('getAll', () => {
+//     it('should return an array of movie', async () => {
+//       const result = ['test'];
 
-  describe("updateMovie", () => {
-    it("should update a movie", () => {
-      expect(service.updateMovie(0, {
-        title: "Test Movie 2",
-        director: "Test Director 2",
-        year: 2022,
-        genres: ["action", "comedy"],
-      })).toEqual(service.getOne(0));
-    });
+//       expect(await service.getAll()).toStrictEqual([event]);
+//       // expect(await service.getAll()).toBeInstanceOf(Array);
+//     });
+//   });
 
-    it("should throw NotFoundException", () => {
-      try {
-        service.updateMovie(999, {});
-      } catch(e) {
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
-    });
-  });
+//   describe("addMovie", () => {
+//     it("should add a movie", async () => {
+//       expect(await service.addMovie(event)).toEqual(await service.getOne("1"));
+//     });
+//   });
 
-  describe('getAll', () => {
-    it('should return a array', () => {
-      const result = service.getAll();
-      expect(result).toBeInstanceOf(Array);
-    });
-  });
+//   describe("updateMovie", () => {
+//     it("should update a movie", async () => {
+//       expect(await service.updateMovie("0", {
+//         title: "Test Movie 2",
+//         director: "Test Director 2",
+//         year: 2022,
+//         genres: ["action", "comedy"],
+//       })).toEqual(service.getOne("0"));
+//       console.log(await service.getAll());
+//     });
+//   });
+//   //   it("should throw NotFoundException", () => {
+//   //     try {
+//   //       service.updateMovie("999", {});
+//   //     } catch(e) {
+//   //       expect(e).toBeInstanceOf(NotFoundException);
+//   //     }
+//   //   });
+//   // });
 
-  describe('getOne', () => {
-    it('should return a Movie', () => {
-      const result = service.getOne(0);
-      expect(result).toBeDefined();
-      expect(result).toBeInstanceOf(Movie);
-    });
+//   // describe('getAll', () => {
+//   //   it('should return a array', () => {
+//   //     const result = service.getAll();
+//   //     expect(result).toBeInstanceOf(Promise);
+//   //   });
+//   // });
 
-    it('should throw NotFoundException', () => {
-      try {
-        service.getOne(999);
-      } catch(e) {
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
-    })
-  });
+//   // describe('getOne', () => {
+//   //   it('should return a Movie', () => {
+//   //     const result = service.getOne("0");
+//   //     expect(result).toBeDefined();
+//   //     expect(result).toBeInstanceOf(Promise);
+//   //   });
 
-  describe("removeMovie", () => {
-    it("should delete a movie", () => {
-      const beforeDelete: number = service.getAll().length;
-      service.removeMovie(0);
-      const afterDelete: number = service.getAll().length;
-      expect(afterDelete).toBeLessThan(beforeDelete);
-    });
+//   //   it('should throw NotFoundException', () => {
+//   //     try {
+//   //       service.getOne("999");
+//   //     } catch(e) {
+//   //       expect(e).toBeInstanceOf(NotFoundException);
+//   //     }
+//   //   })
+//   // });
 
-    it("should throw NotFoundException", () => {
-      try {
-        service.removeMovie(999);
-      } catch(e) {
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
-    });
-  });
-});
+//   // describe("deleteMovie", () => {
+//   //   it("should delete a movie", () => {
+//   //     const beforeDelete: number = service.getAll().length;
+//   //     service.deleteMovie("0");
+//   //     const afterDelete: number = service.getAll().length;
+//   //     expect(afterDelete).toBeLessThan(beforeDelete);
+//   //   });
+
+//   //   it("should throw NotFoundException", () => {
+//   //     try {
+//   //       service.deleteMovie("999");
+//   //     } catch(e) {
+//   //       expect(e).toBeInstanceOf(NotFoundException);
+//   //     }
+//   //   });
+//   // });
+// });

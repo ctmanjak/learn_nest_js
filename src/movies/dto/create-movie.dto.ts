@@ -1,4 +1,5 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsMongoId, IsNumber, IsOptional, IsString } from "class-validator";
+import { Types } from "mongoose";
 
 export class CreateMovieDTO {
     @IsString()
@@ -11,6 +12,6 @@ export class CreateMovieDTO {
     readonly year: number;
 
     @IsOptional()
-    @IsString({each: true})
-    readonly genres: string[];
+    @IsMongoId({ each: true })
+    readonly genres: Types.ObjectId[];
 }
